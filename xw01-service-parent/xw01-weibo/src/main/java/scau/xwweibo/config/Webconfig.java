@@ -1,11 +1,13 @@
 package scau.xwweibo.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import scau.xwcommon.interceptor.JwtInterceptor;
 import scau.xwcommon.interceptor.LoginInterceptor;
-
+@Configuration
 public class Webconfig implements WebMvcConfigurer {
 
     @Value("${my.upload_dir}")
@@ -13,8 +15,12 @@ public class Webconfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new JwtInterceptor())
+                .addPathPatterns("/api/weibo/**").order(1);
+
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/api/weibos/add");
+                .addPathPatterns("/api/weibo/**").order(2);
+
     }
 
 

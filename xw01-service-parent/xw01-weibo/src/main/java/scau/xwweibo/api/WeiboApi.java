@@ -1,6 +1,7 @@
 package scau.xwweibo.api;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.seata.core.context.RootContext;
 import io.seata.core.exception.TransactionException;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,7 +80,11 @@ public class WeiboApi {
         return ResponseEntity.ok(result);
     }
 
-    //根据id查询微博
+    /**
+     * 根据id查询单条微博对象
+     * @param wbId
+     * @return
+     */
     @RequestMapping("findById")
     public ResponseEntity<Result<Weibos>> findById(Integer wbId){
         Result<Weibos> result=weiboService.findById(wbId);
@@ -92,6 +98,24 @@ public class WeiboApi {
             }
         }
         return ResponseEntity.ok(result);
+    }
+
+
+    /**
+     * 分页查询所有微博
+     * @param pageNum
+     * @param pageSize
+     * @param findtxt
+     * @param state
+     * @return
+     */
+    @GetMapping("list")
+    public ResponseEntity<Result<Page<Weibos>>> list(Integer pageNum, Integer pageSize, String findtxt, Integer state){
+        Result<Page<Weibos>> result=weiboService.list(pageNum,pageSize,findtxt,state);
+        if(result.getCode()==200){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.status(400).body(result);
     }
 
 }

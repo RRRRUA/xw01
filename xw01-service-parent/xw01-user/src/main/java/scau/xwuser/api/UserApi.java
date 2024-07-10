@@ -1,6 +1,9 @@
 package scau.xwuser.api;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.seata.core.context.RootContext;
 import io.seata.core.exception.TransactionException;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -20,9 +23,13 @@ import scau.xwcommon.service.UsersService;
 import scau.xwcommon.service.WeibosService;
 import scau.xwcommon.util.Result;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -100,12 +107,35 @@ public class UserApi {
     //每个请求都写一个资源名称，用于限流、熔断等过于麻烦，openfeign中已经实现了自动配置
 //    @SentinelResource(value = "login",fallback = "loginBlockHandler")
     @RequestMapping("login")
-    public ResponseEntity<Result<Users>> login(String loginName, String loginPwd, HttpSession session) {
+    public ResponseEntity<Result<Users>> login(String loginName, String loginPwd, HttpSession session,  HttpServletResponse response) {
         Result<Users> result = usersService.login(loginName, loginPwd);
         if(result.getCode()==200){
             Users users = result.getData();
             session.setAttribute("cur_user", users);
+
+            //生成jwt
+            JwtBuilder builder = Jwts.builder();
+            //设置唯一编号
+            builder.setId(UUID.randomUUID().toString());
+            //凭证创建的时间
+            builder.setIssuedAt(new Date());
+            //设置过期时间
+            builder.setExpiration(new Date(System.currentTimeMillis() + 1000*60*6));
+            //设置凭证验签的加密方式和密码
+            builder.signWith(SignatureAlgorithm.HS256, "gugu");
+            //携带的参数
+
+            builder.claim("userId", users.getUserId());
+            builder.claim("userNickname", users.getUserNickname());
+            builder.claim("userLoginname", users.getUserLoginname());
+            builder.claim("userScore", users.getUserScore());
+            builder.claim("userAttioncount", users.getUserAttioncount());
+            builder.setSubject(users.getUserId() + "");
+
+            String jwt = builder.compact();
+            System.out.println(jwt);
             users.setUserLoginpwd(null);
+            response.setHeader("Authorization", jwt);
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.status(401).body(result);
