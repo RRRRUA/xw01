@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="scau.xwadmin.mapper.AdminsMapper">
+    <resultMap id="BaseResultMap" type="scau.xwcommon.entity.Admins">
+            <id property="adminId" column="admin_id" jdbcType="INTEGER"/>
+            <result property="adminName" column="admin_name" jdbcType="VARCHAR"/>
+            <result property="adminLoginname" column="admin_loginname" jdbcType="VARCHAR"/>
+            <result property="adminLoginpwd" column="admin_loginpwd" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        admin_id,admin_name,admin_loginname,
+        admin_loginpwd
+    </sql>
+</mapper>

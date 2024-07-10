@@ -1,0 +1,13 @@
+# bootstrap.yml是在application.yml之前加载的，所以可以用来配置一些优先级较高的属性
+spring:
+  application:
+    # 微服务名称，供别人调用
+    name: xw01-admin
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      config:
+        group: XW01_GROUP
+        file-extension: yaml

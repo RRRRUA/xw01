@@ -1,0 +1,49 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: xw01-gateway
+
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allow-credentials: false
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            exposedHeaders: "*"
+      discovery:
+        locator:
+          # 如果是true，公网网址就是微服务的名称当前缀 http://localhost:9000/xw-user/user/login也会暴露出去
+          enabled: false
+          lowerCaseServiceId: true
+
+      routes:
+        # -数组
+        - id: userapi
+          # lb关键字表示从注册中心获取服务列表
+          uri: lb://xw01-user/
+          # 断言，路径相同的请求会被路由到指定的服务
+          predicates:
+            # -类字段 predicates.Path=
+            - Path=/xw01/user/api/**
+          # 过滤器，对请求进行处理，StripPrefix表示去掉n个前缀
+          filters:
+            - StripPrefix=2
+
+        - id: weiboapi
+          uri: lb://xw01-weibo/
+          predicates:
+            - Path=/xw01/weibo/api/**
+          filters:
+            - StripPrefix=2
+

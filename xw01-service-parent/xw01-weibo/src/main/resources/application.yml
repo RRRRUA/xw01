@@ -1,0 +1,49 @@
+server:
+  port: 9090
+
+my:
+  upload_dir: ${my.upload_dir}
+
+spring:
+#  main:
+#    allow-bean-definition-overriding: true
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
+#  application:
+#    # 微服务名称，供别人调用
+#    name: xw01-weibo
+  cloud:
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#      username: nacos
+#      password: nacos
+    sentinel:
+      eager: true  # 取消懒加载
+      transport:
+        dashboard: localhost:8480 # 配置Sentinel dashboard地址
+feign:
+  sentinel:
+    enabled: true
+
+
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      db-type: mysql
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

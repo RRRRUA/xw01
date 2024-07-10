@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scau.xwweibo.mapper.WeibosMapper">
+
+    <resultMap id="BaseResultMap" type="scau.xwcommon.entity.Weibos">
+            <id property="wbId" column="wb_id" jdbcType="INTEGER"/>
+            <result property="wbUserLoginname" column="wb_user_loginname" jdbcType="VARCHAR"/>
+            <result property="wbTitle" column="wb_title" jdbcType="VARCHAR"/>
+            <result property="wbContent" column="wb_content" jdbcType="VARCHAR"/>
+            <result property="wbCreatetime" column="wb_createtime" jdbcType="TIMESTAMP"/>
+            <result property="wbReadcount" column="wb_readcount" jdbcType="INTEGER"/>
+            <result property="wbImg" column="wb_img" jdbcType="VARCHAR"/>
+            <result property="wbState" column="wb_state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        wb_id,wb_user_loginname,wb_title,
+        wb_content,wb_createtime,wb_readcount,
+        wb_img,wb_state
+    </sql>
+</mapper>

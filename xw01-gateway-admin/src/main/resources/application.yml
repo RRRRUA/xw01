@@ -1,0 +1,37 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: xw01-gateway-admin
+
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allow-credentials: false
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            exposedHeaders: "*"
+      discovery:
+        locator:
+          # 如果是true，公网网址就是微服务的名称当前缀 http://localhost:9000/xw-user/user/login也会暴露出去
+          enabled: false
+          lowerCaseServiceId: true
+
+      routes:
+        - id: adminapi
+          uri: lb://xw01-admin/
+          predicates:
+            - Path=/xw01/admin/api/**
+          filters:
+            - StripPrefix=2
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scau.xwweibo.mapper.CommentsMapper">
+
+    <resultMap id="BaseResultMap" type="scau.xwcommon.entity.Comments">
+            <id property="cmId" column="cm_id" jdbcType="INTEGER"/>
+            <result property="cmWeiboid" column="cm_weiboid" jdbcType="INTEGER"/>
+            <result property="cmUserLoginname" column="cm_user_loginname" jdbcType="VARCHAR"/>
+            <result property="cmContent" column="cm_content" jdbcType="VARCHAR"/>
+            <result property="cmCreatetime" column="cm_createtime" jdbcType="TIMESTAMP"/>
+            <result property="cmState" column="cm_state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        cm_id,cm_weiboid,cm_user_loginname,
+        cm_content,cm_createtime,cm_state
+    </sql>
+</mapper>
