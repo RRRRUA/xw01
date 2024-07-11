@@ -53,10 +53,11 @@ public class CommentsServiceImpl implements CommentsService {
         return Result.success(commentsPage);
     }
 
+
     @Override
     public Result<List<Map<String, Object>>> listCountTop4(List<Weibos> weibos) {
 
-      //根据微博id查询评论数前4的微博
+        //根据微博id查询评论数前4的微博
         QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("cm_weiboid as weiboId,COUNT(*) as count");
         queryWrapper.lambda().in(Comments::getCmWeiboid, weibos.stream().map(Weibos::getWbId).toArray(Integer[]::new))
@@ -65,12 +66,22 @@ public class CommentsServiceImpl implements CommentsService {
                 .last("ORDER BY COUNT(*) DESC, max(cm_createTime) DESC LIMIT 4");
         List<Map<String, Object>> result = commentsMapper.selectMaps(queryWrapper);
         return Result.success(result);
-
-
-
     }
 
+
+    @Override
+    public Result<Page<Comments>> findByuserName(Integer pageNum, Integer pageSize, String userName) {
+        Page<Comments> page=new Page<>(pageNum,pageSize);
+        QueryWrapper<Comments> qw = new QueryWrapper<>();
+        qw.lambda().eq(Comments::getCmUserLoginname,userName);
+        Page<Comments> commentsPage = commentsMapper.selectPage(page, qw);
+        return Result.success(commentsPage);
+    }
+
+
+
 }
+
 
 
 

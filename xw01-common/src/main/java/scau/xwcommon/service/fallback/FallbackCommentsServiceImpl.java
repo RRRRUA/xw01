@@ -26,4 +26,9 @@ public class FallbackCommentsServiceImpl implements CommentsService {
     public Result<List<Map<String, Object>>> listCountTop4(List<Weibos> weibos) {
         return Result.error("3服务器繁忙，请稍后再试");
     }
+
+    @Override
+    public Result<Page<Comments>> findByuserName(Integer pageNum, Integer pageSize, String userName) {
+        return Result.error("3服务器繁忙，请稍后再试");
+    }
 }

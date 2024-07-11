@@ -82,14 +82,15 @@ public class WeiboServiceImpl implements WeibosService {
             page=weibosMapper.selectPage(page,queryWrapper);
         }else{
 //            Page<Weibos> page = new Page<>(pageNum,pageSize);
-            LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
-                    .like(Weibos::getWbTitle,findtxt).or().like(Weibos::getWbContent,findtxt)
-                    .eq(Weibos::getWbState,state);
+//            LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
+//                    .like(Weibos::getWbTitle,findtxt).or().like(Weibos::getWbContent,findtxt)
+//                    .eq(Weibos::getWbState,state);
 
-//        QueryWrapper<Weibos> qw= new QueryWrapper<>();
-//        qw.lambda().eq(Weibos::getWbState,state)
-//                .and(q->q.like(Weibos::getWbTitle,findtxt).or().like(Weibos::getWbContent,findtxt));
-            page=weibosMapper.selectPage(page,queryWrapper);
+        QueryWrapper<Weibos> qw= new QueryWrapper<>();
+        qw.lambda().eq(Weibos::getWbState,state)
+                .and(q->q.like(Weibos::getWbTitle,findtxt).or().like(Weibos::getWbContent,findtxt));
+        page=weibosMapper.selectPage(page,qw);
+//            page=weibosMapper.selectPage(page,queryWrapper);
         }
 
         System.out.println("查询到的微博："+page.getRecords());

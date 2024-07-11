@@ -1,5 +1,6 @@
 package scau.xwweibo.api;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.seata.core.context.RootContext;
 import io.seata.core.exception.TransactionException;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -58,6 +59,22 @@ public class CommentApi {
             GlobalTransactionContext.reload(RootContext.getXID()).rollback();
             return ResponseEntity.status(400).body(Result.error("增加积分失败"));
         }
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 我的评论
+     * @param pageNum
+     * @param pageSize
+     * @param session
+     * @return
+     */
+    @RequestMapping("mycomment")
+    public ResponseEntity<Result> myComment(int pageNum,int pageSize,HttpSession session) {
+        Users cur_user = (Users)session.getAttribute("cur_user");
+
+        String loginUsername = cur_user.getUserLoginname();
+        Result<Page<Comments>> result = commentsService.findByuserName(pageNum,pageSize,loginUsername);
         return ResponseEntity.ok(result);
     }
 }

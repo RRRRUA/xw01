@@ -34,6 +34,7 @@ public interface CommentsService  {
                                @RequestParam("content") String content,
                                @RequestParam("loginUsername") String loginUsername);
 
+    @RequestMapping("comments/list")
     Result<Page<Comments>> list(@RequestParam("pageNum") Integer pageNum,
                                 @RequestParam("pageSize") Integer pageSize,
                                 @RequestParam("state") Integer state);
@@ -45,4 +46,10 @@ public interface CommentsService  {
      */
     @RequestMapping("comments/countTop4ByReadCount")
     Result<List<Map<String, Object>>> listCountTop4(@RequestBody List<Weibos> weibos);
+
+
+    @RequestMapping("comments/findByuserName")
+    Result<Page<Comments>> findByuserName(@RequestParam("pageNum") Integer pageNum,
+                                          @RequestParam("pageSize") Integer pageSize,
+                                          @RequestParam("userName") String userName);
 }

@@ -31,7 +31,7 @@ spring:
         - id: adminapi
           uri: lb://xw01-admin/
           predicates:
-            - Path=/xw01/admin/api/**
+            - Path=/admin/api/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 

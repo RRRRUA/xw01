@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -48,7 +50,6 @@ public class WeiboApi {
 
     /**
      * 发表微博
-     *
      * @param title
      * @param content
      * @param photofile
@@ -90,7 +91,6 @@ public class WeiboApi {
 
     /**
      * 根据id查询单条微博对象
-     *
      * @param wbId
      * @return
      */
@@ -112,7 +112,6 @@ public class WeiboApi {
 
     /**
      * 分页查询所有微博
-     *
      * @param pageNum
      * @param pageSize
      * @param findtxt
@@ -131,20 +130,27 @@ public class WeiboApi {
 
     /**
      * 分页查询我的微博
-     *
      * @param pageNum
      * @param pageSize
+     * @param username
      * @param session
      * @return
      */
     @GetMapping("mylist")
-    public ResponseEntity<Result<Page<Weibos>>> mylist(Integer pageNum, Integer pageSize, HttpSession session) {
-        Users cur_user = (Users) session.getAttribute("cur_user");
-        if (cur_user == null) {
-            return ResponseEntity.status(400).body(Result.error("请先登录"));
+    public ResponseEntity<Result<Page<Weibos>>> mylist(Integer pageNum, Integer pageSize,String username, HttpSession session) {
+        Result<Page<Weibos>> result=null;
+        if(username==null||username.equals("")){
+            Users cur_user = (Users) session.getAttribute("cur_user");
+            if (cur_user == null) {
+                return ResponseEntity.status(400).body(Result.error("请先登录"));
+            }
+            String curUser = cur_user.getUserLoginname();
+            result = weiboService.findByUsername(curUser, pageNum, pageSize);
+        }else{
+            result = weiboService.findByUsername(username, pageNum, pageSize);
         }
-        String username = cur_user.getUserLoginname();
-        Result<Page<Weibos>> result = weiboService.findByUsername(username, pageNum, pageSize);
+
+
         if (result.getCode() == 200) {
             return ResponseEntity.ok(result);
         }
@@ -155,22 +161,25 @@ public class WeiboApi {
 
     /**
      * 根据微博id返回微博对象和作者对象和评论列表
-     *
      * @param wbId
      * @param pageNum
      * @param pageSize
      * @return
      */
     @GetMapping("detail")
-    public ResponseEntity<Result<Weibos>> detail(Integer wbId, int pageNum, int pageSize) {
-        Result<Weibos> result = weiboService.findById(wbId);
-        if (result.getCode() == 200) {
-            Weibos wb = result.getData();
-            Result<Users> author = userService.findByLoginName(wb.getWbUserLoginname());
-            if (author.getCode() == 200)
-                wb.getMap().put("author", author.getData());
-            else {
-                wb.getMap().put("author_error", author.getMessage());
+    public ResponseEntity<Result<Weibos>> detail(Integer wbId,int pageNum,int pageSize){
+        Result<Weibos> result=weiboService.findById(wbId);
+//        System.out.println("result1"+result);
+        if(result.getCode()==200){
+            Weibos wb=result.getData();
+            wb.setMap(new HashMap<>());
+//            System.out.println("wb"+wb);
+            Result<Users> author=userService.findByLoginName(wb.getWbUserLoginname());
+//            System.out.println("author"+author);
+            if(author.getCode()==200)
+                wb.getMap().put("author",author.getData());
+            else{
+                wb.getMap().put("author_error",author.getMessage());
             }
             Result<Page<Comments>> comments = commentsService.list(pageNum, pageSize, 1);
             if (comments.getCode() == 200)
@@ -183,7 +192,6 @@ public class WeiboApi {
     }
 
     /**
-     * null
      *
      * @return
      */
@@ -204,7 +212,6 @@ public class WeiboApi {
     }
 
     /**
-     * null
      *
      * @return
      */
