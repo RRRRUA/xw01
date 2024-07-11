@@ -12,6 +12,7 @@ import scau.xwcommon.service.WeibosService;
 import scau.xwcommon.util.Result;
 import scau.xwweibo.mapper.WeibosMapper;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class WeiboServiceImpl implements WeibosService {
     @Autowired
     private WeibosMapper weibosMapper;
 
+    @Resource
+    private CommentsServiceImpl commentsService;
     @Override
     @Transactional
     public Result<Weibos> addWeibo(String userLoginName, String title, String content, String img) {
@@ -131,6 +134,23 @@ public class WeiboServiceImpl implements WeibosService {
         List<Weibos> list=weibosMapper.selectList(qw);
         System.out.println("查询到的微博："+list);
         return Result.success(list);
+    }
+
+
+    /**
+     * 按微博的评论数显示前四名的微博
+     * @return
+     */
+    @Override
+    public Result<List<Weibos>> findTop4ByCommentCount() {
+        QueryWrapper<Weibos> qw = new QueryWrapper<>();
+        qw.lambda().eq(Weibos::getWbState,1);
+        List<Weibos> weibos = weibosMapper.selectList(qw);
+        if(weibos.size()==0||weibos.isEmpty())
+        {
+            return Result.success();
+        }
+        return Result.success(weibos);
     }
 
     //业务层不应该调用别的微服务  eg 发表微博加分，自动发的不加分

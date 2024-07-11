@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import scau.xwcommon.interceptor.JwtInterceptor;
 import scau.xwcommon.interceptor.LoginInterceptor;
-@Configuration
+/*@Configuration*/
 public class Webconfig implements WebMvcConfigurer {
 
     @Value("${my.upload_dir}")

@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import scau.xwcommon.entity.Comments;
+import scau.xwcommon.entity.Weibos;
 import scau.xwcommon.service.CommentsService;
 import scau.xwcommon.util.Result;
 import scau.xwweibo.mapper.CommentsMapper;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 86153
@@ -47,6 +50,23 @@ public class CommentsServiceImpl implements CommentsService {
         return Result.success(commentsPage);
     }
 
+    @Override
+    public Result<List<Map<String, Object>>> listCountTop4(List<Weibos> weibos) {
+
+      //根据微博id查询评论数前4的微博
+        QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.select("cm_weiboid as weiboId,COUNT(*) as count");
+        queryWrapper.lambda().in(Comments::getCmWeiboid, weibos.stream().map(Weibos::getWbId).toArray(Integer[]::new))
+                .eq(Comments::getCmState, 1)
+                .groupBy(Comments::getCmWeiboid)
+                .last("ORDER BY COUNT(*) DESC, max(cm_createTime) DESC LIMIT 4");
+        List<Map<String, Object>> result = commentsMapper.selectMaps(queryWrapper);
+        return Result.success(result);
+
+
+
+    }
 
 }
 

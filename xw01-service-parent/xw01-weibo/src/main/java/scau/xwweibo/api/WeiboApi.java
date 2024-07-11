@@ -25,6 +25,8 @@ import scau.xwcommon.util.Result;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -175,4 +177,21 @@ public class WeiboApi {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("findWeibosByCommentCountTop4")
+    public ResponseEntity<Result<List<Map<String,Object>>>> findWeibosByCommentCountTop4(){
+        Result<List<Weibos>> result = weiboService.findTop4ByCommentCount();
+        if(result.getCode()!=200)
+        {
+            return ResponseEntity.status(500).body(new Result<>(result.getCode(),null,result.getMessage()));
+        }
+        Result<List<Map<String,Object>>> weibos = commentsService.listCountTop4(result.getData());
+        if(result.getCode()!=200)
+        {
+            return ResponseEntity.status(500).body(new Result<>(weibos.getCode(),null,weibos.getMessage()));
+        }
+        weibos.getData().forEach(wb->{
+           wb.put("weiboTitle",weiboService.findById((Integer)wb.get("weiboId")).getData().getWbTitle());
+        });
+        return ResponseEntity.ok(weibos);
+    }
 }

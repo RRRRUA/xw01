@@ -102,4 +102,7 @@ public interface WeibosService {
      */
     @GetMapping("weibo/list2")
     Result<List<Weibos>> list2();
+
+    @GetMapping("weibo/findTop4ByCommentCount")
+    Result<List<Weibos>> findTop4ByCommentCount();
 }

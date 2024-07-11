@@ -2,12 +2,17 @@ package scau.xwcommon.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import scau.xwcommon.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.IService;
+import scau.xwcommon.entity.Weibos;
 import scau.xwcommon.service.fallback.FallbackCommentsServiceImpl;
 import scau.xwcommon.util.Result;
+
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 86153
@@ -32,4 +37,12 @@ public interface CommentsService  {
     Result<Page<Comments>> list(@RequestParam("pageNum") Integer pageNum,
                                 @RequestParam("pageSize") Integer pageSize,
                                 @RequestParam("state") Integer state);
+
+    /**
+     * 获取微博评论数
+     * @param weibos
+     * @return
+     */
+    @RequestMapping("comments/countTop4ByReadCount")
+    Result<List<Map<String, Object>>> listCountTop4(@RequestBody List<Weibos> weibos);
 }
