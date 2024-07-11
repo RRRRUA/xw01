@@ -43,6 +43,17 @@ private AttentionsMapper attentionsMapper;
             return Result.error("删除失败");
         return Result.success(count);
     }
+
+    @Override
+    public Result<Integer> addAttention(String marstLoginname, String userLoginname) {
+        Attentions attentions = new Attentions();
+        attentions.setAttMarstLoginname(marstLoginname);
+        attentions.setAttUserLoginname(userLoginname);
+        int count = attentionsMapper.insert(attentions);
+        if(count!=1)
+            return Result.error("添加失败");
+        return Result.success(count);
+    }
 }
 
 

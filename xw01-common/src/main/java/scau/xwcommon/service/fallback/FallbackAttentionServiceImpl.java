@@ -19,4 +19,9 @@ public class FallbackAttentionServiceImpl implements AttentionsService {
     public Result<Integer> deleteAttention(String marstLoginname, String userLoginname) {
         return Result.error("6服务调用失败，请稍后重试！");
     }
+
+    @Override
+    public Result<Integer> addAttention(String marstLoginname, String userLoginname) {
+        return Result.error("6服务调用失败，请稍后重试！");
+    }
 }

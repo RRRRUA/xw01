@@ -22,4 +22,7 @@ public interface AttentionsService  {
 
     @GetMapping("/deleteAttention")
     Result<Integer> deleteAttention(String marstLoginname, String userLoginname);
+
+    @GetMapping("/addAttention")
+    Result<Integer> addAttention(String marstLoginname, String userLoginname);
 }

@@ -60,4 +60,24 @@ public class AttentionApi {
         }
         return ResponseEntity.ok(result);
     }
+
+    /**
+     *  关注
+     * @param marstLoginname
+     * @param session
+     * @return
+     */
+    @GetMapping("addAttention")
+    public ResponseEntity<Result<Integer>> addAttention(String marstLoginname, HttpSession session) {
+        Users user = (Users) session.getAttribute("cur_user");
+        if (user == null) {
+            return ResponseEntity.status(401).body(Result.error("请先登录！"));
+        }
+        Result<Integer> result = attentionsService.addAttention(marstLoginname, user.getUserLoginname());
+        if(result.getCode() !=200)
+        {
+            return ResponseEntity.status(500).body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
 }
