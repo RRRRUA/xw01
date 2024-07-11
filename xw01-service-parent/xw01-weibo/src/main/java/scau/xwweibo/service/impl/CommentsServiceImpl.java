@@ -2,6 +2,7 @@ package scau.xwweibo.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,17 @@ public class CommentsServiceImpl implements CommentsService {
         int result=commentsMapper.insert(comments);
         return result==1?Result.success(comments):Result.error("评论失败");
     }
+
+    @Override
+    public Result<Page<Comments>> list(Integer pageNum, Integer pageSize, Integer state) {
+        Page<Comments> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cm_state",state);
+        Page<Comments> commentsPage = commentsMapper.selectPage(page, queryWrapper);
+        return Result.success(commentsPage);
+    }
+
+
 }
 
 

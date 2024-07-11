@@ -1,5 +1,6 @@
 package scau.xwcommon.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,4 +29,7 @@ public interface CommentsService  {
                                @RequestParam("content") String content,
                                @RequestParam("loginUsername") String loginUsername);
 
+    Result<Page<Comments>> list(@RequestParam("pageNum") Integer pageNum,
+                                @RequestParam("pageSize") Integer pageSize,
+                                @RequestParam("state") Integer state);
 }

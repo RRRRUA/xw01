@@ -51,11 +51,13 @@ public class WeiboServiceImpl implements WeibosService {
     }
 
     @Override
-    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize, Integer state) {
+    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize) {
+        if(userName==null){
+            return Result.error("用户名不能为空");
+        }
         Page<Weibos> page = new Page<>(pageNum,pageSize);
         LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
                 .eq(Weibos::getWbUserLoginname,userName)
-                .eq(Weibos::getWbState,state)
                 .orderByDesc(Weibos::getWbCreatetime);
 
 //        weibosMapper.selectPage(page,new QueryWrapper<Weibos>().lambda()
@@ -69,6 +71,7 @@ public class WeiboServiceImpl implements WeibosService {
 
     @Override
     public Result<Page<Weibos>> list(Integer pageNum, Integer pageSize, String findtxt, Integer state) {
+        System.out.println(pageNum+" "+pageSize+" "+findtxt+" "+state);
         Page<Weibos> page = new Page<>(pageNum,pageSize);
         if(findtxt==null){
             LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
@@ -86,6 +89,7 @@ public class WeiboServiceImpl implements WeibosService {
             page=weibosMapper.selectPage(page,queryWrapper);
         }
 
+        System.out.println("查询到的微博："+page.getRecords());
         return Result.success(page);
     }
 

@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import scau.xwcommon.entity.Comments;
 import scau.xwcommon.entity.Users;
 import scau.xwcommon.entity.Weibos;
+import scau.xwcommon.service.CommentsService;
 import scau.xwcommon.service.UsersService;
 import scau.xwcommon.service.WeibosService;
 import scau.xwcommon.util.Result;
@@ -32,6 +34,9 @@ public class WeiboApi {
     @Autowired
     private WeibosService weiboService;
 
+    @Qualifier("commentsServiceImpl")
+    @Autowired
+    private CommentsService commentsService;
     @Autowired
     private UsersService userService;
     @Value("${my.upload_dir}")
@@ -116,6 +121,58 @@ public class WeiboApi {
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.status(400).body(result);
+    }
+
+
+    /**
+     * 分页查询我的微博
+     * @param pageNum
+     * @param pageSize
+     * @param session
+     * @return
+     */
+    @GetMapping("mylist")
+    public ResponseEntity<Result<Page<Weibos>>> mylist(Integer pageNum, Integer pageSize, HttpSession session){
+        Users cur_user = (Users)session.getAttribute("cur_user");
+        if(cur_user==null){
+            return ResponseEntity.status(400).body(Result.error("请先登录"));
+        }
+        String username = cur_user.getUserLoginname();
+        Result<Page<Weibos>> result=weiboService.findByUsername(username,pageNum,pageSize);
+        if(result.getCode()==200){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.status(400).body(result);
+    }
+
+    //根据微博id返回微博对象和作者对象和评论列表和该作者所有微博列表
+
+    /**
+     * 根据微博id返回微博对象和作者对象和评论列表
+     * @param wbId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("detail")
+    public ResponseEntity<Result<Weibos>> detail(Integer wbId,int pageNum,int pageSize){
+        Result<Weibos> result=weiboService.findById(wbId);
+        if(result.getCode()==200){
+            Weibos wb=result.getData();
+            Result<Users> author=userService.findByLoginName(wb.getWbUserLoginname());
+            if(author.getCode()==200)
+                wb.getMap().put("author",author.getData());
+            else{
+                wb.getMap().put("author_error",author.getMessage());
+            }
+            Result<Page<Comments>> comments=commentsService.list(pageNum,pageSize,1);
+            if(comments.getCode()==200)
+                wb.getMap().put("comments",comments.getData());
+            else{
+                wb.getMap().put("comments_error",comments.getMessage());
+            }
+        }
+        return ResponseEntity.ok(result);
     }
 
 }

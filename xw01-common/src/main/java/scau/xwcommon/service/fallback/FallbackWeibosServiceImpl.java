@@ -22,7 +22,7 @@ public class FallbackWeibosServiceImpl implements WeibosService {
     }
 
     @Override
-    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize, Integer state) {
+    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize) {
         return Result.error("11服务器繁忙，请稍后再试");
     }
 
