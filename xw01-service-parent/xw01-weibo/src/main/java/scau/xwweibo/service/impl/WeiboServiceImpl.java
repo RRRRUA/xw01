@@ -153,6 +153,17 @@ public class WeiboServiceImpl implements WeibosService {
         return Result.success(weibos);
     }
 
+    @Override
+    public Result<List<Weibos>> findTop4ByReadCount() {
+        QueryWrapper<Weibos> qw = new QueryWrapper<>();
+        qw.lambda().eq(Weibos::getWbState,1)
+                .orderByDesc(Weibos::getWbReadcount)
+                .orderByDesc(Weibos::getWbCreatetime)
+               .last("limit 4");
+        List<Weibos> weibos = weibosMapper.selectList(qw);
+        return Result.success(weibos);
+    }
+
     //业务层不应该调用别的微服务  eg 发表微博加分，自动发的不加分
 //    @Autowired
 //    private RestTemplate restTemplate;

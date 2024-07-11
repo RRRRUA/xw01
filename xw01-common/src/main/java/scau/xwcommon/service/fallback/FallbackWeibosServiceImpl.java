@@ -61,5 +61,10 @@ public class FallbackWeibosServiceImpl implements WeibosService {
         return Result.error("17服务器繁忙，请稍后再试");
     }
 
+    @Override
+    public Result<List<Weibos>> findTop4ByReadCount() {
+        return Result.error("17服务器繁忙，请稍后再试");
+    }
+
 
 }

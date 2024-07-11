@@ -105,4 +105,7 @@ public interface WeibosService {
 
     @GetMapping("weibo/findTop4ByCommentCount")
     Result<List<Weibos>> findTop4ByCommentCount();
+
+    @GetMapping("weibo/findTop4ByReadCount")
+    Result<List<Weibos>> findTop4ByReadCount();
 }

@@ -1,7 +1,9 @@
 package scau.xwweibo.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import scau.xwcommon.service.CommentsService;
 import scau.xwcommon.util.Result;
 import scau.xwweibo.mapper.CommentsMapper;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +58,6 @@ public class CommentsServiceImpl implements CommentsService {
 
       //根据微博id查询评论数前4的微博
         QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
-
         queryWrapper.select("cm_weiboid as weiboId,COUNT(*) as count");
         queryWrapper.lambda().in(Comments::getCmWeiboid, weibos.stream().map(Weibos::getWbId).toArray(Integer[]::new))
                 .eq(Comments::getCmState, 1)
