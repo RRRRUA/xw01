@@ -58,9 +58,9 @@ public class WeiboApi {
     public ResponseEntity<Result<Weibos>> addWeibo(String title, String content, MultipartFile photofile, HttpSession session) throws IOException, TransactionException {
 
         Users cur_user = (Users)session.getAttribute("cur_user");
-        if(cur_user==null){
-            return ResponseEntity.status(400).body(Result.error("请先登录"));
-        }
+//        if(cur_user==null){
+//            return ResponseEntity.status(400).body(Result.error("请先登录"));
+//        }
 
         String username = cur_user.getUserLoginname();
         String photoName = null;

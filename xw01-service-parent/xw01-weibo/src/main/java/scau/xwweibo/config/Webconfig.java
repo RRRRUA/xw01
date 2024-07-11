@@ -16,10 +16,10 @@ public class Webconfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor())
-                .addPathPatterns("/api/weibo/**").order(1);
+                .addPathPatterns("/api/weibo/**").addPathPatterns("api/comment/**").order(1);
 
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/api/weibo/**").order(2);
+    /*    registry.addInterceptor(new LoginInterceptor())
+                .addPathPatterns("/api/weibo/**").addPathPatterns("api/comment/**").order(2);*/
 
     }
 

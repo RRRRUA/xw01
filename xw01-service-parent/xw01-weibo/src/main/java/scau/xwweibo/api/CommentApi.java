@@ -41,10 +41,10 @@ public class CommentApi {
     public ResponseEntity<Result<Comments>> addComment(int wbid,String content,HttpSession session) throws TransactionException {
         Users cur_user = (Users)session.getAttribute("cur_user");
 
-        if(cur_user == null)
-        {
-            return ResponseEntity.ok(Result.error("请先登录"));
-        }
+//        if(cur_user == null)
+//        {
+//            return ResponseEntity.ok(Result.error("请先登录"));
+//        }
         String loginUsername = cur_user.getUserLoginname();
         Result<Comments> result = commentsService.addComents(wbid, content, loginUsername);
         if(result.getCode() != 200)

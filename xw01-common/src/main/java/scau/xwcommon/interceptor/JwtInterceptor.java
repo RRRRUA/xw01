@@ -27,14 +27,17 @@ public class JwtInterceptor implements HandlerInterceptor {
         System.out.println("jwt:"+jwt);
         //只处理分解，不管登录控制
         if(jwt==null||jwt.equals("")){
-            return true;
+            response.setContentType("application/json;charset=utf-8");
+            response.setStatus(400);
+            response.getWriter().write("{\"code\":400,\"msg\":\"请先登录\"}");
+            return false;
         }
         Claims claims=null;
         try {
             //解析令牌
             claims= Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(jwt).getBody();
         }catch (ExpiredJwtException e){
-            //令牌过期
+;            //令牌过期
             response.setStatus(401);
             response.getWriter().write("{\"code\":401,\"msg\":\"令牌无效\"}");
             return false;
@@ -45,21 +48,21 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
 
-     /*   Integer userId = Integer.parseInt(claims.get("userId").toString());
-        String userNickname = claims.get("userNickname").toString();
-        String userLoginname = claims.get("userLoginname").toString();
-        Integer userScore = Integer.parseInt(claims.get("userScore").toString());
-        Integer userAttionCount = Integer.parseInt(claims.get("userAttionCount").toString());
-
-        Users user = new Users();
-        user.setUserId(userId);
-        user.setUserNickname(userNickname);
-        user.setUserLoginname(userLoginname);
-        user.setUserScore(userScore);
-        user.setUserAttioncount(userAttionCount);
-
-
-        request.getSession().setAttribute("cur_user",user);*/
+//        Integer userId = Integer.parseInt(claims.get("userId").toString());
+//        String userNickname = claims.get("userNickname").toString();
+//        String userLoginname = claims.get("userLoginname").toString();
+//        Integer userScore = Integer.parseInt(claims.get("userScore").toString());
+//        Integer userAttionCount = Integer.parseInt(claims.get("userAttionCount").toString());
+//
+//        Users user = new Users();
+//        user.setUserId(userId);
+//        user.setUserNickname(userNickname);
+//        user.setUserLoginname(userLoginname);
+//        user.setUserScore(userScore);
+//        user.setUserAttioncount(userAttionCount);
+//
+//
+//        request.getSession().setAttribute("cur_user",user);
 
         return true;
 
