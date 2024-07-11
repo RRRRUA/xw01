@@ -46,6 +46,7 @@ private AttentionsMapper attentionsMapper;
 
     @Override
     public Result<Integer> addAttention(String marstLoginname, String userLoginname) {
+
         Attentions attentions = new Attentions();
         attentions.setAttMarstLoginname(marstLoginname);
         attentions.setAttUserLoginname(userLoginname);
@@ -53,6 +54,17 @@ private AttentionsMapper attentionsMapper;
         if(count!=1)
             return Result.error("添加失败");
         return Result.success(count);
+    }
+
+    @Override
+    public Result<Boolean> attentionStatus(String marstLoginname, String userLoginname) {
+        LambdaQueryWrapper<Attentions> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Attentions::getAttUserLoginname, userLoginname)
+                .eq(Attentions::getAttMarstLoginname, marstLoginname);
+        List<Attentions> attentionsList = attentionsMapper.selectList(wrapper);
+        if(attentionsList.size() == 0)
+            return Result.success(false);
+        return Result.success(true);
     }
 }
 

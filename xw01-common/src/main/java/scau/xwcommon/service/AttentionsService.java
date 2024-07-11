@@ -25,4 +25,7 @@ public interface AttentionsService  {
 
     @GetMapping("/addAttention")
     Result<Integer> addAttention(String marstLoginname, String userLoginname);
+
+    @GetMapping("/attentionStatus")
+    Result<Boolean> attentionStatus(String marstLoginname, String userLoginname);
 }

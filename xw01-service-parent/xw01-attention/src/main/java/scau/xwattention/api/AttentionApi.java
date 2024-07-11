@@ -73,7 +73,32 @@ public class AttentionApi {
         if (user == null) {
             return ResponseEntity.status(401).body(Result.error("请先登录！"));
         }
+        Result<Boolean> booleanResult = attentionsService.attentionStatus(marstLoginname, user.getUserLoginname());
+        if(booleanResult.getData())
+        {
+            return ResponseEntity.status(400).body(Result.error("您已经关注过该用户！"));
+        }
         Result<Integer> result = attentionsService.addAttention(marstLoginname, user.getUserLoginname());
+        if(result.getCode() !=200)
+        {
+            return ResponseEntity.status(500).body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     *  关注状态
+     * @param marstLoginname
+     * @param session
+     * @return
+     */
+    @GetMapping("attentionStatus")
+    public ResponseEntity<Result<Boolean>> attentionStatus(String marstLoginname, HttpSession session) {
+        Users user = (Users) session.getAttribute("cur_user");
+        if (user == null) {
+            return ResponseEntity.status(401).body(Result.error("请先登录！"));
+        }
+        Result<Boolean> result = attentionsService.attentionStatus(marstLoginname, user.getUserLoginname());
         if(result.getCode() !=200)
         {
             return ResponseEntity.status(500).body(result);
