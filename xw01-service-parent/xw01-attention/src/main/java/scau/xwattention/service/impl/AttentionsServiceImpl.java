@@ -32,6 +32,17 @@ private AttentionsMapper attentionsMapper;
         List<Attentions> attentionsList = attentionsMapper.selectPage(page, wrapper).getRecords();
         return Result.success(attentionsList);
     }
+
+    @Override
+    public Result<Integer> deleteAttention(String marstLoginname, String userLoginname) {
+        LambdaQueryWrapper<Attentions> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Attentions::getAttUserLoginname, userLoginname)
+                .eq(Attentions::getAttMarstLoginname, marstLoginname);
+        int count = attentionsMapper.delete(wrapper);
+        if(count!=1)
+            return Result.error("删除失败");
+        return Result.success(count);
+    }
 }
 
 

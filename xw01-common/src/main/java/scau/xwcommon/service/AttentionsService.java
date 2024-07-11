@@ -19,4 +19,7 @@ public interface AttentionsService  {
 
     @GetMapping("/findMyAttention")
     Result<List<Attentions>> findMyAttention(Integer pageNum, Integer pageSize, String userLoginname);
+
+    @GetMapping("/deleteAttention")
+    Result<Integer> deleteAttention(String marstLoginname, String userLoginname);
 }
