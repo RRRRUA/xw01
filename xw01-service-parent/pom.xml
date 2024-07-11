@@ -19,6 +19,7 @@
         <module>xw01-user</module>
         <module>xw01-weibo</module>
         <module>xw01-admin</module>
+        <module>xw01-attention</module>
     </modules>
     <dependencies>
 <!--        写到service-parent里，各个子微服务就不用再写-->

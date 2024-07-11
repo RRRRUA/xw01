@@ -47,3 +47,9 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: attentionapi
+          uri: lb://xw01-attention/
+          predicates:
+            - Path=/xw01/attention/api/**
+          filters:
+            - StripPrefix=2
