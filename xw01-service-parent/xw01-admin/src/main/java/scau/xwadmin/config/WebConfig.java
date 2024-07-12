@@ -7,7 +7,7 @@ import scau.xwadmin.interceptor.AllowInterceptor;
 import scau.xwadmin.interceptor.JwtInterceptor;
 import scau.xwadmin.interceptor.LoginInterceptor;
 
-@Configuration
+//@Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
     //注册Jwt拦截器，拦截/api/**路径

@@ -1,5 +1,6 @@
 package scau.xwcommon.service.fallback;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 import scau.xwcommon.entity.Users;
 import scau.xwcommon.service.UsersService;
@@ -31,5 +32,10 @@ public class FallbackUserServiceImpl implements UsersService {
     @Override
     public Result<Users> findByLoginName(String userLoginName) {
         return Result.error("8服务器繁忙，请稍后再试");
+    }
+
+    @Override
+    public Result<Page<Users>> list(int pageNum, int pageSize, int status) {
+        return Result.error("9服务器繁忙，请稍后再试");
     }
 }

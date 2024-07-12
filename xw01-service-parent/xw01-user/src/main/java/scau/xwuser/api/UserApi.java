@@ -112,7 +112,6 @@ public class UserApi {
         if(result.getCode()==200){
             Users users = result.getData();
             session.setAttribute("cur_user", users);
-
             //生成jwt
             JwtBuilder builder = Jwts.builder();
             //设置唯一编号
@@ -154,6 +153,15 @@ public class UserApi {
     public ResponseEntity<Result<Users>> test(HttpSession session) {
         Users users = (Users) session.getAttribute("cur_user");
         return ResponseEntity.ok(Result.success(users));
+    }
+
+    /**
+     * 根据用户名查询用户信息
+     */
+    @GetMapping("getUserByLoginName")
+    public ResponseEntity<Result<Users>> getUserByLoginName(String loginName) {
+        Result<Users> result = usersService.findByLoginName(loginName);
+        return ResponseEntity.ok(result);
     }
 
 }

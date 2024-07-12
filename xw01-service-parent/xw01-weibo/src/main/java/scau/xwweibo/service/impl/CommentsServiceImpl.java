@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RestController;
 import scau.xwcommon.entity.Comments;
 import scau.xwcommon.entity.Weibos;
 import scau.xwcommon.service.CommentsService;
@@ -24,7 +25,7 @@ import java.util.Map;
 * @description 针对表【comments】的数据库操作Service实现
 * @createDate 2024-07-03 11:22:55
 */
-@Service
+@RestController
 public class CommentsServiceImpl implements CommentsService {
 
 
@@ -45,7 +46,8 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public Result<Page<Comments>> list(Integer pageNum, Integer pageSize, Integer state) {
+    public Result<Page<Comments>> list1(Integer pageNum, Integer pageSize, Integer state) {
+        System.out.println(pageNum+" 1"+pageSize+" "+state);
         Page<Comments> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("cm_state",state);
@@ -78,6 +80,13 @@ public class CommentsServiceImpl implements CommentsService {
         return Result.success(commentsPage);
     }
 
+    @Override
+    public Result<Comments> update(Integer commentId, Integer state) {
+        Comments comments = commentsMapper.selectById(commentId);
+        comments.setCmState(state);
+        int result = commentsMapper.updateById(comments);
+        return result==1?Result.success(comments):Result.error("更新失败");
+    }
 
 
 }

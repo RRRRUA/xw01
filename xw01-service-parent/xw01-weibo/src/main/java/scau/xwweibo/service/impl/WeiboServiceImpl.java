@@ -25,6 +25,7 @@ public class WeiboServiceImpl implements WeibosService {
 
     @Resource
     private CommentsServiceImpl commentsService;
+
     @Override
     @Transactional
     public Result<Weibos> addWeibo(String userLoginName, String title, String content, String img) {
@@ -37,8 +38,8 @@ public class WeiboServiceImpl implements WeibosService {
         weibos.setWbReadcount(0);
         weibos.setWbState(1);
         weibos.setWbCreatetime(new Date());
-        int result=weibosMapper.insert(weibos);
-        if(result>0){
+        int result = weibosMapper.insert(weibos);
+        if (result > 0) {
             return Result.success(weibos);
         }
         return Result.error("发表微博失败");
@@ -47,30 +48,40 @@ public class WeiboServiceImpl implements WeibosService {
     @Override
     public Result<Weibos> findById(Integer wbId) {
         Weibos weibos = weibosMapper.selectById(wbId);
-        if(weibos!=null){
+        if (weibos != null) {
             return Result.success(weibos);
         }
-            return Result.error("微博不存在");
+        return Result.error("微博不存在");
     }
+
 
     @Override
-    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize) {
-        if(userName==null){
+    public Result<Page<Weibos>> findByUsername(String userName, Integer pageNum, Integer pageSize, Integer state) {
+        if (userName == null) {
             return Result.error("用户名不能为空");
         }
-        Page<Weibos> page = new Page<>(pageNum,pageSize);
-        LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
-                .eq(Weibos::getWbUserLoginname,userName)
-                .orderByDesc(Weibos::getWbCreatetime);
+        Page<Weibos> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<>();
 
-//        weibosMapper.selectPage(page,new QueryWrapper<Weibos>().lambda()
-//                .eq(Weibos::getWbUserLoginname,userName)
-//                .eq(Weibos::getWbState,state));
-
-        page= weibosMapper.selectPage(page,queryWrapper);
-        System.out.println("查询到的微博："+page.getRecords());
+        if (state != 0) {
+            queryWrapper.eq(Weibos::getWbUserLoginname, userName)
+                    .eq(Weibos::getWbState, state).orderByDesc(Weibos::getWbCreatetime);
+        } else {
+            queryWrapper.eq(Weibos::getWbUserLoginname, userName).orderByDesc(Weibos::getWbCreatetime);
+        }
+        page = weibosMapper.selectPage(page, queryWrapper);
+        System.out.println("查询到的微博：" + page.getRecords());
         return Result.success(page);
     }
+//        Page<Weibos> page = new Page<>(pageNum, pageSize);
+//        LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
+//                .eq(Weibos::getWbUserLoginname, userName)
+//                .orderByDesc(Weibos::getWbCreatetime);
+//
+////        weibosMapper.selectPage(page,new QueryWrapper<Weibos>().lambda()
+////                .eq(Weibos::getWbUserLoginname,userName)
+////                .eq(Weibos::getWbState,state));
+//
 
     @Override
     public Result<Page<Weibos>> list(Integer pageNum, Integer pageSize, String findtxt, Integer state) {
@@ -107,6 +118,7 @@ public class WeiboServiceImpl implements WeibosService {
 
     @Override
     public Result<Integer> updateState(Integer wbId, Integer state) {
+        System.out.println(wbId+" "+state);
         LambdaQueryWrapper<Weibos> queryWrapper = new LambdaQueryWrapper<Weibos>()
                 .eq(Weibos::getWbId,wbId);
         Weibos weibos = weibosMapper.selectOne(queryWrapper);

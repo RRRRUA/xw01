@@ -1,6 +1,7 @@
 package scau.xwadmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,22 @@ public class AdminsServiceImpl implements AdminsService {
     private AdminsMapper adminsMapper;
     @Override
     @Transactional
-    public Result<Admins> register(Admins admins) {
+    public Result<Admins> register(String adminName,String adminLoginname,String adminLoginpwd,
+                                   Integer level) {
         //加密密码
-        System.out.println("service:"+admins.toString());
-        String hashpwd= BCrypt.hashpw(admins.getAdminLoginpwd(),BCrypt.gensalt());
+        //System.out.println("service:"+admins.toString());
+        Admins admins=new Admins();
+        String hashpwd= BCrypt.hashpw(adminLoginpwd,BCrypt.gensalt());
         System.out.println(hashpwd);
+        admins.setAdminName(adminName);
+        admins.setAdminLoginname(adminLoginname);
         admins.setAdminLoginpwd(hashpwd);
         adminsMapper.insert(admins);
+        Admins tmp=adminsMapper.selectOne(new QueryWrapper<Admins>().lambda().eq(Admins::getAdminLoginname,adminLoginname));
+        Integer userid=tmp.getAdminId();
+        System.out.println(userid+" "+level);
+        adminsMapper.insertRoles(userid,level);
+
         return Result.success(admins);
     }
 
@@ -47,7 +57,7 @@ public class AdminsServiceImpl implements AdminsService {
         System.out.println(admin.toString());
         //验证密码
         if(BCrypt.checkpw(loginPwd,admin.getAdminLoginpwd())){
-            List<String> roles=adminsMapper.selectRoles(admin.getAdminId());
+            List<Integer> roles=adminsMapper.selectRoles(admin.getAdminId());
             List<String> pmses=adminsMapper.selectPmses(admin.getAdminId());
             admin.setLevel(roles);
             admin.setPmses(pmses);
@@ -57,6 +67,38 @@ public class AdminsServiceImpl implements AdminsService {
         else{
             return Result.error("密码错误");
         }
+    }
+//    @Override
+//    public Result<List<Admins>> list() {
+//        List<Admins> list=adminsMapper.selectList(null);
+//        for(Admins admin:list){
+//            List<String> roles=adminsMapper.selectRoles(admin.getAdminId());
+//            List<String> pmses=adminsMapper.selectPmses(admin.getAdminId());
+//            admin.setLevel(roles);
+//            admin.setPmses(pmses);
+//        }
+//
+//        return Result.success(list);
+//    }
+
+    @Override
+    public Result<Page<Admins>> list(int currentPage, int pageSize) {
+        // 创建分页对象
+        Page<Admins> page = new Page<>(currentPage, pageSize);
+
+        // 执行分页查询
+        Page<Admins> resultPage = adminsMapper.selectPage(page, null);
+
+        // 遍历查询结果，为每个Admin对象填充角色和权限信息
+        for (Admins admin : resultPage.getRecords()) {
+            List<Integer> roles = adminsMapper.selectRoles(admin.getAdminId());
+            List<String> pmses = adminsMapper.selectPmses(admin.getAdminId());
+            admin.setLevel(roles);
+            admin.setPmses(pmses);
+        }
+
+        // 返回封装好的分页结果
+        return Result.success(resultPage);
     }
 }
 

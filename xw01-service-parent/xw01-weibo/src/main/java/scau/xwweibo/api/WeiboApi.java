@@ -139,15 +139,15 @@ public class WeiboApi {
     @GetMapping("mylist")
     public ResponseEntity<Result<Page<Weibos>>> mylist(Integer pageNum, Integer pageSize,String username, HttpSession session) {
         Result<Page<Weibos>> result=null;
-        if(username==null||username.equals("")){
+        if(username==null|| username.isEmpty()){
             Users cur_user = (Users) session.getAttribute("cur_user");
             if (cur_user == null) {
                 return ResponseEntity.status(400).body(Result.error("请先登录"));
             }
             String curUser = cur_user.getUserLoginname();
-            result = weiboService.findByUsername(curUser, pageNum, pageSize);
+            result = weiboService.findByUsername(curUser, pageNum, pageSize,0);
         }else{
-            result = weiboService.findByUsername(username, pageNum, pageSize);
+            result = weiboService.findByUsername(username, pageNum, pageSize,1);
         }
 
 
@@ -181,7 +181,7 @@ public class WeiboApi {
             else{
                 wb.getMap().put("author_error",author.getMessage());
             }
-            Result<Page<Comments>> comments = commentsService.list(pageNum, pageSize, 1);
+            Result<Page<Comments>> comments = commentsService.list1(pageNum, pageSize, 1);
             if (comments.getCode() == 200)
                 wb.getMap().put("comments", comments.getData());
             else {

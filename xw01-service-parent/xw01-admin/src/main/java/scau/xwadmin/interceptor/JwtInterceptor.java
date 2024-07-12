@@ -20,7 +20,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     private String jwtKey;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        String jwtKey="gugu";
+        String jwtKey="gugu";
 
         response.setCharacterEncoding("utf-8");
         //获取请求头中的令牌
@@ -50,7 +50,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         int id=Integer.parseInt(claims.get("adminId").toString());
         String name=claims.get("adminName").toString();
         String loginName=claims.get("loginName").toString();
-        List<String> roles=(List<String>) claims.get("roles");
+        List<Integer> roles=(List<Integer>) claims.get("roles");
         List<String> pmses=(List<String>) claims.get("pmses");
 
         //将数据放入请求中

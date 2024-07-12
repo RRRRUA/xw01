@@ -1,6 +1,7 @@
 package scau.xwuser.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,13 @@ public class UsersServiceImpl implements UsersService  {
 
     @Override
     public Result<Integer> updateStatus(String loginName, Integer status) {
-        return null;
+        Users users=usersMapper.selectOne(new LambdaQueryWrapper<Users>().eq(Users::getUserLoginname,loginName));
+        if(users==null){
+            return Result.error("用户不存在");
+        }
+        users.setUserState(status);
+        int result=usersMapper.updateById(users);
+        return result==1?Result.success(users.getUserState()):Result.error("修改状态失败");
     }
 
     @Override
@@ -77,6 +84,17 @@ public class UsersServiceImpl implements UsersService  {
         Users users=usersMapper.selectOne(new LambdaQueryWrapper<Users>().eq(Users::getUserLoginname,userLoginName));
         return users==null?Result.error("用户不存在"):Result.success(users);
     }
+
+    @Override
+    public Result<Page<Users>> list(int pageNum, int pageSize, int status) {
+        Page<Users> page=new Page<>(pageNum,pageSize);
+        LambdaQueryWrapper<Users> qw=new LambdaQueryWrapper<>();
+        qw.eq(Users::getUserState,status);
+        Page<Users> usersPage=usersMapper.selectPage(page,qw);
+        return Result.success(usersPage);
+    }
+
+
 
 
 }

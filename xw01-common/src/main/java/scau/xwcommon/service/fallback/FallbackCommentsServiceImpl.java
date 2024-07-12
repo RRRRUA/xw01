@@ -18,7 +18,7 @@ public class FallbackCommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public Result<Page<Comments>> list(Integer pageNum, Integer pageSize, Integer state) {
+    public Result<Page<Comments>> list1(Integer pageNum, Integer pageSize, Integer state) {
         return Result.error("3服务器繁忙，请稍后再试");
     }
 
@@ -29,6 +29,11 @@ public class FallbackCommentsServiceImpl implements CommentsService {
 
     @Override
     public Result<Page<Comments>> findByuserName(Integer pageNum, Integer pageSize, String userName) {
+        return Result.error("3服务器繁忙，请稍后再试");
+    }
+
+    @Override
+    public Result<Comments> update(Integer commentId, Integer state) {
         return Result.error("3服务器繁忙，请稍后再试");
     }
 }

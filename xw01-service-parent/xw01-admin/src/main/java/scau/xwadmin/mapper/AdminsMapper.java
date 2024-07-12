@@ -2,6 +2,8 @@ package scau.xwadmin.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import scau.xwcommon.entity.Admins;
 
@@ -14,11 +16,11 @@ import java.util.List;
 * @Entity scau.xwadmin.Admins
 */
 public interface AdminsMapper extends BaseMapper<Admins> {
-    @Select("select r.rolename from sec_role r\n" +
+    @Select("select r.roleid from sec_role r\n" +
             "join sec_user_role ur on ur.roleid=r.roleid\n" +
             "join admins a on a.admin_id=ur.userid\n" +
             "where a.admin_id=#{adminid}")
-    List<String> selectRoles(int adminid);
+    List<Integer> selectRoles(int adminid);
 
     @Select("select distinct(p.pmsname) from sec_role r\n" +
             "join sec_user_role ur on ur.roleid=r.roleid\n" +
@@ -31,6 +33,11 @@ public interface AdminsMapper extends BaseMapper<Admins> {
             "join sec_permission p on uap.pmsid=p.pmsid\n" +
             "where userid=#{adminid}")
     List<String> selectPmses(int adminid);
+
+
+    @Insert("insert into sec_user_role (userid,roleid) values (#{userid},#{roleid})")
+    Integer insertRoles(@Param("userid") int userid, @Param("roleid") int roleid);
+
 }
 
 

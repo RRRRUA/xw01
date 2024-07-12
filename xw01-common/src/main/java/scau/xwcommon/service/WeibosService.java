@@ -50,7 +50,8 @@ public interface WeibosService {
     @GetMapping("weibo/findByUsername")
     Result<Page<Weibos>> findByUsername(@RequestParam("userName") String userName,
                                         @RequestParam("pageNum") Integer pageNum,
-                                        @RequestParam("pageSize") Integer pageSize);
+                                        @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam("state") Integer state);
 
     /**
      * 查询所有微博

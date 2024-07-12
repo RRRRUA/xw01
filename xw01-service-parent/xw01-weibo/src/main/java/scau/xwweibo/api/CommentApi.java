@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 public class CommentApi {
 
     @Autowired
-    @Qualifier("commentsServiceImpl")
     private CommentsService commentsService;
     @Autowired
     private UsersService usersService;

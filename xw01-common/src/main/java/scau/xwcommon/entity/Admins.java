@@ -44,7 +44,7 @@ public class Admins implements Serializable {
      *角色
      */
     @TableField(exist = false)
-    private List<String> level;
+    private List<Integer> level;
 
     /**
      * 权限

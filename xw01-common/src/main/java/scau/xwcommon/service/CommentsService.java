@@ -2,6 +2,7 @@ package scau.xwcommon.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public interface CommentsService  {
                                @RequestParam("loginUsername") String loginUsername);
 
     @RequestMapping("comments/list")
-    Result<Page<Comments>> list(@RequestParam("pageNum") Integer pageNum,
+    Result<Page<Comments>> list1(@RequestParam("pageNum") Integer pageNum,
                                 @RequestParam("pageSize") Integer pageSize,
                                 @RequestParam("state") Integer state);
 
@@ -52,4 +53,8 @@ public interface CommentsService  {
     Result<Page<Comments>> findByuserName(@RequestParam("pageNum") Integer pageNum,
                                           @RequestParam("pageSize") Integer pageSize,
                                           @RequestParam("userName") String userName);
+
+    @PostMapping("comments/update")
+    Result<Comments> update(@RequestParam("commentId")Integer commentId,
+                            @RequestParam("state") Integer state);
 }

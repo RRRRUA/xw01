@@ -1,5 +1,6 @@
 package scau.xwcommon.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,5 +75,14 @@ public interface UsersService{
     @RequestMapping("user/findByLoginName")
     Result<Users> findByLoginName(@RequestParam("userLoginName") String userLoginName);
 
-
+    /**
+     * 根据状态查询用户
+     * @param pageNum
+     * @param pageSize
+     * @param status
+     */
+    @RequestMapping("user/listuser")
+    Result<Page<Users>> list(@RequestParam("pageNum") int pageNum,
+                                 @RequestParam("pageSize") int pageSize,
+                                 @RequestParam("status") int status);
 }
